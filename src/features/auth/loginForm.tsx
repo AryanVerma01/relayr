@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { cn } from "@/lib/utils";
 import {
   CardContent,
   CardDescription,
@@ -23,6 +22,9 @@ import {
   FormMessage 
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import github from '../../../public/github-icon-1.svg' 
+import google from '../../../public/google-color-svgrepo-com.svg' 
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -32,6 +34,7 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Loginform = () => {
+  
   const router = useRouter();
 
   const form = useForm<LoginFormValues>({
@@ -43,15 +46,26 @@ const Loginform = () => {
   });
 
   async function onSubmit(values: LoginFormValues) {
-    console.log(values);
-    // Add your login logic here
+    await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+        callbackURL: '/'
+    },{
+        onSuccess: (ctx) => {
+            router.push('/');
+        },
+
+        onError : (ctx) => {
+            toast.error(ctx.error.message);
+        }
+    })
   }
 
   const isPending = form.formState.isSubmitting;
 
   return (
-    <div className="flex flex-col gap-10 mx-40">
-      <CardHeader className="bg-blue-200 text-center">
+    <div className="flex flex-col gap-10  selection:bg-white selection:text-black">
+      <CardHeader className="text-center">
         <CardTitle>Welcome back</CardTitle>
         <CardDescription>Login to continue</CardDescription>
       </CardHeader>
@@ -64,15 +78,17 @@ const Loginform = () => {
                   variant={"outline"}
                   type="button"
                   disabled={isPending}
+                  className="w-full bg-black text-center text-white border-neutral-700 hover:cursor-pointer transition-all hover:-translate-y-0.5 hover:bg-neutral-800 font-medium"
                 >
-                  Continue with Github
+                  <Image src={github} alt="github" className="w-4 bg-white rounded-full"></Image>Continue with Github
                 </Button>
                 <Button
                   type="button"
                   variant={"outline"}
                   disabled={isPending}
+                  className="w-full bg-black text-center border-neutral-700 text-white hover:cursor-pointer transition-all hover:-translate-y-0.5 hover:bg-neutral-800 font-medium"
                 >
-                  Continue with Google
+                  <Image src={google} alt="" className="w-4"/> Continue with Google
                 </Button>
               </div>
               <div className="grid gap-6">
@@ -87,9 +103,10 @@ const Loginform = () => {
                           type="email"
                           placeholder="a@example.com"
                           {...field}
+                          className="border-neutral-800"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs text-red-400"/>
                     </FormItem>
                   )}
                 />
@@ -104,9 +121,10 @@ const Loginform = () => {
                           type="password"
                           placeholder="********"
                           {...field}
+                          className="border-neutral-800"
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-xs text-red-400"/>
                     </FormItem>
                   )}
                 />
@@ -114,7 +132,7 @@ const Loginform = () => {
                   variant={"secondary"}
                   type="submit"
                   disabled={isPending}
-                  className="w-full"
+                  className="w-full bg-orange-500 text-center text-white hover:cursor-pointer transition-all hover:-translate-y-0.5 hover:bg-orange-400 font-medium"
                 >
                   Login
                 </Button>

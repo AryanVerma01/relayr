@@ -1,12 +1,14 @@
-import React from 'react'
-import LoginForm from "@/features/auth/loginForm"
+import LoginForm from "@/features/auth/loginForm";
+import { authClient } from "@/lib/auth-client";
+import { requireUnauth } from "@/lib/auth-utils";
+import { redirect } from "next/navigation";
 
-const Login = () => {
-  return (
-    <div>
-      <LoginForm/>
-    </div>
-  )
-}
+const Login = async () => {
 
-export default Login
+  await requireUnauth();
+  
+  return <LoginForm />
+
+};
+
+export default Login;

@@ -1,30 +1,17 @@
-"use client"
+import Logout from "@/features/auth/logout";
+import { requireAuth } from "@/lib/auth-utils";
+import { caller } from "@/trpc/server";
 
-import { Button } from '@/components/ui/button';
-import { authClient } from '@/lib/auth-client'
-import React from 'react'
+const page = async () => {
 
-const page = () => {
+  await requireAuth();
+
+  const data = await caller.getUsers()
   
-  const {
-    data,
-    isPending,
-    error,
-    refetch
-  } = authClient.useSession();
-  
-  return (
-    <div>
-      {JSON.stringify(data)}
-      {data && <div>
-          <Button onClick={()=>{
-            authClient.signOut()
-          }}>
-            Logout
-          </Button> 
-        </div>}  
-    </div>
-  )
-}
+  return <div>Protected Page
+    {JSON.stringify(data)}
+    <Logout/>
+  </div>;
+};
 
-export default page
+export default page;
