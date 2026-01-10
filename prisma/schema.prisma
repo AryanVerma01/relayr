@@ -12,7 +12,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-
 model User {
   id            String    @id
   name          String
@@ -74,4 +73,9 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Workflow { 
+  id String @id @default(cuid())
+  name String 
 }
