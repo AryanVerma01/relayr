@@ -17,23 +17,37 @@ export const execute = inngest.createFunction(
       generateText, {
         model: google('gemini-2.5-flash'),
         system: 'you are helpful chef',
-        prompt: 'lasagnia recipe'
+        prompt: 'lasagnia recipe',
+        experimental_telemetry: {                // ? For Sentry   
+          isEnabled: true,                      
+          recordInputs: true,
+          recordOutputs: true,
+        },
       }) 
 
       const { steps: openaisteps } = await step.ai.wrap("openai-text-generate",
         generateText, {
           model: openai("gpt-4"),
           system: 'you are helpful chef',
-          prompt: 'lasagnia recipe'
+          prompt: 'lasagnia recipe',
+          experimental_telemetry: {             // ? For Sentry
+            isEnabled: true,
+            recordInputs: true,
+            recordOutputs: true,
+          },
         }) 
 
         const { steps : anthropicsteps } = await step.ai.wrap("anthropic-text-generate",
           generateText, {
             model: anthropic('claude-3-7-sonnet-latest'),
             system: 'you are helpful chef',
-            prompt: 'lasagnia recipe'
+            prompt: 'lasagnia recipe',
+            experimental_telemetry: {             // ? For Sentry
+              isEnabled: true,
+              recordInputs: true,
+              recordOutputs: true,
+            },
           }) 
-    
 
     return {
       geministeps,
