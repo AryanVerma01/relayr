@@ -3,8 +3,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 
+  devIndicators: false, 
+  
   // ! Change default route to /workflows
-
   async redirects(){
     return [
       {

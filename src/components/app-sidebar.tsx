@@ -9,6 +9,7 @@ import google from '../../public/google-color-svgrepo-com.svg'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { authClient } from '@/lib/auth-client'
+import { useHasActiveSubscription } from '@/features/subscriptions/hooks/use-subscriptions'
 
 const menuItems = [{
     title : 'Home',
@@ -23,7 +24,7 @@ const menuItems = [{
         url: '/credentials'
     },
     {
-        title: 'Executioms',
+        title: 'Executions',
         icon: HistoryIcon,
         url: '/executions'
     }]
@@ -36,6 +37,7 @@ const AppSidebar = () => {
 
     const router = useRouter();
     const pathname = usePathname();
+    const { hasActiveSubscription , isLoading } = useHasActiveSubscription();
 
   return (
     <Sidebar collapsible='icon'>
@@ -56,6 +58,7 @@ const AppSidebar = () => {
             {menuItems.map((group) => (
                 <SidebarGroup key={group.title}>
                     <SidebarGroupContent >
+                        <SidebarMenu>
                         {group.items.map((item)=>(
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton
@@ -75,27 +78,31 @@ const AppSidebar = () => {
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
+                        </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
             ))}
         </SidebarContent>
         <SidebarFooter>
             <SidebarMenu>
+                { !hasActiveSubscription && !isLoading && (
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         tooltip={'Upgrade to Pro'}
                         className='px-4 gap-x-4 h-10'
-                        onClick={()=>{}}
+                        onClick={()=>{authClient.checkout({ slug: 'pro' })
+                        }}
                     >
                         <StarIcon className='size-4'/>
                         <span>Upgrade to Pro</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
+                )}
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         tooltip={'Billing Portal'}
                         className='px-4 gap-x-4 h-10'
-                        onClick={()=>{}}
+                        onClick={()=>{authClient.customer.portal()}}
                     >
                         <CreditCardIcon className='size-4'/>
                         <span>Billing Portal</span>
