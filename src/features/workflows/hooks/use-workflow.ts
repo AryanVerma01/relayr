@@ -4,12 +4,15 @@ import { useTRPC } from "@/trpc/client"
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation'
 import { toast } from "sonner";
+import { useWorkflowsParams } from "./use-workflows-params";
+import { useEntitySearch } from "@/hooks/use-entity-search";
 
 
 export const useSuspenseWorkflows = () => {
     const trpc = useTRPC();
+    const [params, setParams] = useWorkflowsParams();
 
-    return useSuspenseQuery(trpc.workflows.getMany.queryOptions())
+    return useSuspenseQuery(trpc.workflows.getMany.queryOptions(params))
 }
 
 

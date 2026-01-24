@@ -3,7 +3,39 @@
 
 import React from "react";
 import { useCreateWorkflows, useSuspenseWorkflows } from "../hooks/use-workflow";
-import { EntityContainer, EntityHeader } from "@/components/entity-components";
+import { EntityContainer, EntityHeader, EntityPagination, EntitySearch } from "@/components/entity-components";
+import { useWorkflowsParams } from "../hooks/use-workflows-params";
+import { useEntitySearch } from "@/hooks/use-entity-search";
+
+
+export const WorkFlowPagination = () => {
+  const workflows = useSuspenseWorkflows();
+  const [params , setParams] = useWorkflowsParams();
+
+
+  return <EntityPagination
+    disabled = {workflows.isPending}
+    totalPages={workflows.data.totalPages}
+    page={workflows.data.page}
+    onPageChange={(page) => setParams({... params, page })}
+  >
+    
+  </EntityPagination>
+} 
+
+export const WorkflowsSearch =  () => {
+
+  const [params, setParams] = useWorkflowsParams() 
+  const { searchValue,onSearchChange } = useEntitySearch(params,setParams);
+
+  return <EntitySearch
+    value={searchValue}
+    placeholder="Search Workflows"
+    onChange={onSearchChange}
+  >
+  </EntitySearch>
+}
+
 
 export const WorkflowsList = () => {
   const workflows = useSuspenseWorkflows();
@@ -43,10 +75,12 @@ export const WorkflowContainer = ({
 
   return <EntityContainer
     header = {<WorkflowHeader/>}
-    search = {<></>}
-    pagination = {<></>}
+    search = {<WorkflowsSearch/>}
+    pagination = {<WorkFlowPagination/>}
   >
    
     {children}
   </EntityContainer>
 };
+
+
