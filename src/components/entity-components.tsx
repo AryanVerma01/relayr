@@ -60,13 +60,13 @@ export const EntityHeader = ({
         )}
       </div>
       {onNew && !newButtonHref && (
-        <Button onClick={onNew} size={"sm"} disabled={isCreating || disabled}>
+        <Button onClick={onNew} size={"sm"} disabled={isCreating || disabled} className="bg-white text-black hover:bg-neutral-200">
           <PlusIcon className="size-4" />
           {newButtonLabel}
         </Button>
       )}
       {newButtonHref && !onNew && (
-        <Button size="sm" asChild>
+        <Button size="sm" className="bg-white text-black hover:bg-neutral-200" asChild>
           <Link href={newButtonHref}>
             <PlusIcon className="size-4" />
             {newButtonLabel}
@@ -245,7 +245,7 @@ export function EntityList<T>({
   if (items.length === 0 && emptyView) {
     return (
       <>
-        <div className="flex-1 flex justify-center items-center">
+        <div className="flex-1 flex justify-center items-center ">
           <div className="mx-auto max-w-sm">{emptyView}</div>
         </div>
       </>
@@ -303,12 +303,12 @@ export const EntityItem = ({
     <Link href={href} prefetch>
       <Card
         className={cn(
-          "p-4 shadow-none hover:shadow cursor-pointer",
+          "p-4 shadow-none bg-neutral-900 hover:shadow cursor-pointer hover:bg-neutral-800 hover:translate-y-0.5 transition-all duration-150",
           isRemoving && "opacity-50 cursor-not-allowed",
           className,
         )}
       >
-        <CardContent className="flex flex-row items-center justify-between p-0">
+        <CardContent className="flex flex-row items-center justify-between p-0 ">
           <div className="flex items-center gap-3">
             {image}
             <div>
@@ -339,9 +339,10 @@ export const EntityItem = ({
                     onClick={(e: any) => {
                       e.stopPropagation();
                     }}
+                    className="bg-neutral-900"
                   >
                     <DropdownMenuItem onClick={handleRemove}>
-                      <TrashIcon className="size-4" />
+                      <TrashIcon className="size-4 text-red-500" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
